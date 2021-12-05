@@ -433,6 +433,11 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.0.tgz#7f698254aadf921e48dda8c0a6b304026b8a9323"
   integrity sha512-JLo+Y592QzIE+q7Dl2pMUtt4q8SKYI5jDrZxrozEQxnGVOyYE+GWK9eLkwTaeN9DDctlaRAQ3TBmzZ1qdLE30A==
 
+"@types/cannon@^0.1.2":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@types/cannon/-/cannon-0.1.7.tgz#207054af280bcb6c14febd8f8c886c51b89fb5b2"
+  integrity sha512-D2BpUjnKI6B8+VkUHXWHqDziR6V3nllRwKsSCYajJusWOfGxuaF9s7gqrYnSAX7G2ykbZ+YWyOCOz1Gk3RRVrw==
+
 "@types/json-schema@^7.0.9":
   version "7.0.9"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
@@ -502,6 +507,18 @@
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
+
+"@types/three@^0.89.11":
+  version "0.89.12"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.89.12.tgz#cab29544bbdfbbc62257dd48bf921eb3dc0e055a"
+  integrity sha512-765EF9eneCbmDluzVMJj6ix2EwrkjSSPHa5BuMKLZzYeh04Ho40iheRqHfRgRWbFbtj6oVfOB7V62ZvYYXJ0jA==
+  dependencies:
+    "@types/webvr-api" "*"
+
+"@types/webvr-api@*":
+  version "0.0.36"
+  resolved "https://registry.yarnpkg.com/@types/webvr-api/-/webvr-api-0.0.36.tgz#39d2694cb40d816805a285c7ed3c7ceb488b371a"
+  integrity sha512-fGXlG8KA8cHOGR2BG7w40nSEKgAqg9h7cUm6zW1dSI7DCba7RvJNKGt0sgJzAXXvNzAAOcIGY6OpHEnKGhhjsQ==
 
 "@typescript-eslint/eslint-plugin@5.5.0":
   version "5.5.0"
@@ -976,6 +993,11 @@ caniuse-lite@^1.0.30001202, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.300012
   version "1.0.30001265"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001265.tgz#0613c9e6c922e422792e6fcefdf9a3afeee4f8c3"
   integrity sha512-YzBnspggWV5hep1m9Z6sZVLOt7vrju8xWooFAgN6BA5qvy98qPAPb7vNUzypFaoh2pb3vlfzbDO8tB57UPGbtw==
+
+cannon@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/cannon/-/cannon-0.6.2.tgz#1e7bc72dd5841982f3c104c2bc578bfa4fb1c572"
+  integrity sha1-HnvHLdWEGYLzwQTCvFeL+k+xxXI=
 
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
@@ -4118,6 +4140,26 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+three@0.135.0:
+  version "0.135.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.135.0.tgz#cff4ec8edd3c51ce9bc7e88d13e8eafed4d0ddfc"
+  integrity sha512-kuEpuuxRzLv0MDsXai9huCxOSQPZ4vje6y0gn80SRmQvgz6/+rI0NAvCRAw56zYaWKMGMfqKWsxF9Qa2Z9xymQ==
+
+three@^0.90.0:
+  version "0.90.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.90.0.tgz#be478e7c0f82c5ae742c197db1e38e58b6190d1b"
+  integrity sha512-sCTgOp/0ITLy0bsUoNeUROq2Tt1G0+StfRBs9ljFTENRF5JkKlTjZ+RWSH6qyq6O3c5fDKRupfuqZE/+LbETiA==
+
+threejs-dice@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/threejs-dice/-/threejs-dice-1.1.0.tgz#796c1e94f2c12eeb89d97879beced0fa66bc47ce"
+  integrity sha512-OkC5DDyB6wymqTs9c85+F3Css3b6I7xiRosx7JFcQW55Ue95DSHVpdWNaaGKd5mfxFo3iwR+Q78vJXcZkC/yRw==
+  dependencies:
+    "@types/cannon" "^0.1.2"
+    "@types/three" "^0.89.11"
+    cannon "^0.6.2"
+    three "^0.90.0"
 
 through2@^4.0.0:
   version "4.0.2"
