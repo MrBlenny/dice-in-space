@@ -1,182 +1,135 @@
-import react, { useEffect, useRef } from 'react';
-
+import react, { useRef } from 'react';
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
-import { DiceManager, DiceD6, DiceD20 } from './dice';
+import { DiceManager } from './dice';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Die } from './Die';
+import { useMount, useRaf } from 'react-use';
 
 // standard global variables
-var scene,
-  camera,
-  renderer,
-  controls,
-  world,
-  dice = [];
+var scene, camera, renderer, controls, world;
 
-// FUNCTIONS
-function init(container) {
-  // SCENE
-  scene = new THREE.Scene();
-  // CAMERA
-  var SCREEN_WIDTH = window.innerWidth;
-  var SCREEN_HEIGHT = window.innerHeight;
-  var VIEW_ANGLE = 45,
-    ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
-    NEAR = 0.01,
-    FAR = 20000;
-  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  scene.add(camera);
-  camera.position.set(0, 30, 30);
-  // RENDERER
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-  container.appendChild(renderer.domElement);
-  // EVENTS
-  // CONTROLS
-  controls = new OrbitControls(camera, renderer.domElement);
-
-  let ambient = new THREE.AmbientLight('#ffffff', 0.3);
-  scene.add(ambient);
-
-  let directionalLight = new THREE.DirectionalLight('#ffffff', 0.5);
-  directionalLight.position.x = -1000;
-  directionalLight.position.y = 1000;
-  directionalLight.position.z = 1000;
-  scene.add(directionalLight);
-
-  let light = new THREE.SpotLight(0xefdfd5, 1.3);
-  light.position.y = 100;
-  light.target.position.set(0, 0, 0);
-  light.castShadow = true;
-  light.shadow.camera.near = 50;
-  light.shadow.camera.far = 110;
-  light.shadow.mapSize.width = 1024;
-  light.shadow.mapSize.height = 1024;
-  scene.add(light);
-
-  // FLOOR
-  var floorMaterial = new THREE.MeshPhongMaterial({
-    color: '#13053c',
-    side: THREE.DoubleSide,
-  });
-  var floorGeometry = new THREE.PlaneGeometry(300, 300, 10, 10);
-  var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.receiveShadow = true;
-  floor.rotation.x = Math.PI / 2;
-  scene.add(floor);
-  // SKYBOX/FOG
-  var skyBoxGeometry = new THREE.BoxGeometry(10000, 10000, 10000);
-  var skyBoxMaterial = new THREE.MeshPhongMaterial({
-    color: 0x9999ff,
-    side: THREE.BackSide,
-  });
-  var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-  // scene.add(skyBox);
-  scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
-
-  ////////////
-  // CUSTOM //
-  ////////////
-  world = new CANNON.World();
-
-  world.gravity.set(0, -9.82 * 20, 0);
-  world.broadphase = new CANNON.NaiveBroadphase();
-  world.solver.iterations = 16;
-
-  DiceManager.setWorld(world);
-
-  //Floor
-  let floorBody = new CANNON.Body({
-    mass: 0,
-    shape: new CANNON.Plane(),
-    material: DiceManager.floorBodyMaterial,
-  });
-  floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-  world.add(floorBody);
-
-  //Walls
-
-  const DICE_COUNT = 1; // 6
-  var colors = ['#ff0000', '#ffff00', '#00ff00', '#0000ff', '#ff00ff'];
-  for (var i = 0; i < DICE_COUNT; i++) {
-    var die = new DiceD20({ size: 1.5, backColor: colors[i] });
-    scene.add(die.getObject());
-    dice.push(die);
-  }
-
-  function randomDiceThrow() {
-    var diceValues = [];
-
-    for (var i = 0; i < dice.length; i++) {
-      let yRand = Math.random() * 20;
-      dice[i].resetBody(); // As the die is going to be reused between throws, it is necessary to reset the body
-      dice[i].getObject().position.x = -15 - (i % 3) * 1.5;
-      dice[i].getObject().position.y = 2 + Math.floor(i / 3) * 1.5;
-      dice[i].getObject().position.z = -15 + (i % 3) * 1.5;
-      dice[i].getObject().quaternion.x =
-        ((Math.random() * 90 - 45) * Math.PI) / 180;
-      dice[i].getObject().quaternion.z =
-        ((Math.random() * 90 - 45) * Math.PI) / 180;
-      dice[i].updateBodyFromMesh();
-      let rand = Math.random() * 5;
-      dice[i].getObject().body.velocity.set(25 + rand, 40 + yRand, 15 + rand);
-      dice[i]
-        .getObject()
-        .body.angularVelocity.set(
-          20 * Math.random() - 10,
-          20 * Math.random() - 10,
-          20 * Math.random() - 10,
-        );
-
-      diceValues.push({ dice: dice[i], value: i + 1 });
-    }
-
-    DiceManager.prepareValues(diceValues);
-  }
-
-  randomDiceThrow();
-
-  requestAnimationFrame(animate);
-}
-
-function animate() {
-  updatePhysics();
-  render();
-  update();
-
-  requestAnimationFrame(animate);
-}
-
-function updatePhysics() {
-  world.step(1.0 / 60.0);
-
-  for (var i in dice) {
-    dice[i].updateMeshFromBody();
-  }
-}
-
-function update() {
-  controls.update();
-}
-
-function render() {
-  renderer.render(scene, camera);
-}
-
-export const Dice = () => {
+export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
   const rendererEl = useRef();
-  useEffect(() => {
+  const sceneRef = useRef();
+
+  useMount(() => {
     if (!rendererEl.current) {
       return;
     }
     if (typeof window == 'undefined' && typeof document == 'undefined') {
       return;
     }
-    init(rendererEl.current);
-  }, [rendererEl.current]);
+    const container = rendererEl.current;
 
-  return <div style={{ width: '100vw', height: '100vh' }} ref={rendererEl} />;
+    // SCENE
+    scene = new THREE.Scene();
+
+    // CAMERA
+    var SCREEN_WIDTH = window.innerWidth;
+    var SCREEN_HEIGHT = window.innerHeight;
+    var VIEW_ANGLE = 45,
+      ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT,
+      NEAR = 0.01,
+      FAR = 20000;
+    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+    scene.add(camera);
+    camera.position.set(0, 10, 30);
+
+    // RENDERER
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    container.appendChild(renderer.domElement);
+    // EVENTS
+    // CONTROLS
+    controls = new OrbitControls(camera, renderer.domElement);
+
+    let ambient = new THREE.AmbientLight('#ffffff', 0.3);
+    scene.add(ambient);
+
+    let directionalLight = new THREE.DirectionalLight('#ffffff', 0.5);
+    directionalLight.position.x = -1000;
+    directionalLight.position.y = 1000;
+    directionalLight.position.z = 1000;
+    scene.add(directionalLight);
+
+    let light = new THREE.SpotLight(0xefdfd5, 1.3);
+    light.position.y = 300;
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    // light.shadow.camera.near = 50;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    scene.add(light);
+
+    // FLOOR
+    var floorMaterial = new THREE.MeshPhongMaterial({
+      color: '#13053c',
+      side: THREE.DoubleSide,
+    });
+    var floorGeometry = new THREE.CylinderGeometry(300, 300, 0.1, 64);
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // SKYBOX/FOG
+    var skyBoxGeometry = new THREE.BoxGeometry(10000, 10000, 10000);
+    var skyBoxMaterial = new THREE.MeshPhongMaterial({
+      color: 0x9999ff,
+      side: THREE.BackSide,
+    });
+    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+    scene.add(skyBox);
+
+    world = new CANNON.World();
+    world.gravity.set(0, gravity * 10, 0);
+    world.broadphase = new CANNON.NaiveBroadphase();
+    world.solver.iterations = 16;
+
+    DiceManager.setWorld(world);
+
+    // Floor
+    let floorBody = new CANNON.Body({
+      mass: 0,
+      shape: new CANNON.Plane(),
+      material: DiceManager.floorBodyMaterial,
+    });
+    floorBody.quaternion.setFromAxisAngle(
+      new CANNON.Vec3(1, 0, 0),
+      -Math.PI / 2,
+    );
+
+    world.add(floorBody);
+
+    // Refs
+    sceneRef.current = scene;
+  });
+
+  useRaf(() => {});
+
+  if (renderer && scene && world) {
+    world.step(1.0 / 60.0);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  return (
+    <div style={{ width: '100vw', height: '100vh' }} ref={rendererEl}>
+      {sceneRef.current &&
+        dice.map((die, idx) => (
+          <Die
+            key={idx}
+            scene={sceneRef.current}
+            diceType={die.type}
+            launched={die.launched}
+            setValue={setValue}
+            controls={controls}
+          />
+        ))}
+    </div>
+  );
 };

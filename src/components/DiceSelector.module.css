@@ -1,0 +1,13 @@
+.diceSelector {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 32px;
+    display: flex;
+    flex-direction: row;
+}
+
+.dice {
+    padding: 15px;
+    color: white;
+}

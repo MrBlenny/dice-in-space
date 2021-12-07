@@ -1,0 +1,11 @@
+.button {
+    position: absolute;
+    left: 50%;
+    bottom: 200px;
+    transform: translateX(-50%);
+    border: 2px solid blue;
+    padding: 10px;
+    background-color: transparent;
+    color: blue;
+    font-size: 14px;
+}
