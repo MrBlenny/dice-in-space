@@ -22,6 +22,8 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     }
     const container = rendererEl.current;
 
+    const loader = new THREE.TextureLoader();
+
     // SCENE
     scene = new THREE.Scene();
 
@@ -34,19 +36,20 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
       FAR = 20000;
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     scene.add(camera);
-    camera.position.set(0, 10, 30);
+    camera.position.set(0, 5, 30);
 
     // RENDERER
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
     container.appendChild(renderer.domElement);
-    // EVENTS
+
     // CONTROLS
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.maxPolarAngle = Math.PI / 2;
 
+    // LIGHTING
     let ambient = new THREE.AmbientLight('#ffffff', 0.3);
     scene.add(ambient);
 
@@ -56,19 +59,19 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     directionalLight.position.z = 1000;
     scene.add(directionalLight);
 
-    let light = new THREE.SpotLight(0xefdfd5, 1.3);
-    light.position.y = 300;
-    light.target.position.set(0, 0, 0);
-    light.castShadow = true;
-    // light.shadow.camera.near = 50;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
-    scene.add(light);
+    // let light = new THREE.SpotLight(0xefdfd5, 1.3);
+    // light.position.y = 300;
+    // light.target.position.set(0, 0, 0);
+    // light.castShadow = true;
+    // light.shadow.mapSize.width = 1024;
+    // light.shadow.mapSize.height = 1024;
+    // scene.add(light);
 
     // FLOOR
-    var floorMaterial = new THREE.MeshPhongMaterial({
-      color: '#13053c',
+    var floorMaterial = new THREE.MeshStandardMaterial({
+      // color: '#13053c',
       side: THREE.DoubleSide,
+      map: loader.load('/images/moon.jpg'),
     });
     var floorGeometry = new THREE.CylinderGeometry(300, 300, 0.1, 64);
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -76,13 +79,14 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     scene.add(floor);
 
     // SKYBOX/FOG
-    var skyBoxGeometry = new THREE.BoxGeometry(10000, 10000, 10000);
-    var skyBoxMaterial = new THREE.MeshPhongMaterial({
-      color: 0x9999ff,
+    var skyBoxGeometry = new THREE.SphereGeometry(10000, 64, 64);
+    var skyBoxMaterial = new THREE.MeshStandardMaterial({
       side: THREE.BackSide,
+      map: loader.load('/images/stars.jpg'),
     });
+
     var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-    scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
+    // scene.fog = new THREE.FogExp2(0x9999ff, 0.00025);
     scene.add(skyBox);
 
     world = new CANNON.World();

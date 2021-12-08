@@ -449,7 +449,7 @@ class DiceObject {
         this.calculateTextureSize(this.size / 2 + this.size * this.textMargin) *
         2;
       canvas.width = canvas.height = ts;
-      context.font = ts / (1 + 2 * this.textMargin) + 'pt Arial';
+      context.font = ts / (1 + 2 * this.textMargin) + 'pt "VT323"';
       context.fillStyle = backColor;
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.textAlign = 'center';
@@ -599,7 +599,7 @@ export class DiceD4 extends DiceObject {
         let context = canvas.getContext('2d');
         let ts = this.calculateTextureSize(this.size / 2 + this.size * 2) * 2;
         canvas.width = canvas.height = ts;
-        context.font = ts / 5 + 'pt Arial';
+        context.font = ts / 5 + 'pt "VT323"';
         context.fillStyle = backColor;
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.textAlign = 'center';
@@ -679,7 +679,7 @@ export class DiceD6 extends DiceObject {
       '19',
       '20',
     ];
-    this.textMargin = 1.0;
+    this.textMargin = 0.5;
     this.mass = 300;
     this.inertia = 13;
 
@@ -738,7 +738,7 @@ export class DiceD8 extends DiceObject {
       '19',
       '20',
     ];
-    this.textMargin = 1.2;
+    this.textMargin = 0.5;
     this.mass = 340;
     this.inertia = 10;
 
@@ -809,7 +809,7 @@ export class DiceD10 extends DiceObject {
       '19',
       '20',
     ];
-    this.textMargin = 1.0;
+    this.textMargin = 0.5;
     this.mass = 350;
     this.inertia = 9;
 
@@ -889,7 +889,7 @@ export class DiceD12 extends DiceObject {
       '19',
       '20',
     ];
-    this.textMargin = 1.0;
+    this.textMargin = 0.5;
     this.mass = 350;
     this.inertia = 8;
 
@@ -968,7 +968,7 @@ export class DiceD20 extends DiceObject {
       '19',
       '20',
     ];
-    this.textMargin = 1.0;
+    this.textMargin = 0.5;
     this.mass = 400;
     this.inertia = 6;
 
