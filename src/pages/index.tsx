@@ -53,7 +53,7 @@ export default function Home() {
         <link
           href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
           rel="stylesheet"
-        ></link>
+        />
       </Head>
 
       <main className={styles.main}>
