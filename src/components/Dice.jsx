@@ -9,6 +9,8 @@ import { useMount, useRaf } from 'react-use';
 // standard global variables
 var scene, camera, renderer, controls, world;
 
+const PLANET_SIZE = 1000;
+
 export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
   const rendererEl = useRef();
   const sceneRef = useRef();
@@ -36,7 +38,7 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
       FAR = 20000;
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     scene.add(camera);
-    camera.position.set(0, 5, 30);
+    camera.position.set(0, PLANET_SIZE + 5, 10);
 
     // RENDERER
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -73,7 +75,7 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
       side: THREE.DoubleSide,
       map: loader.load('/images/moon.jpg'),
     });
-    var floorGeometry = new THREE.CylinderGeometry(300, 300, 0.1, 64);
+    var floorGeometry = new THREE.SphereGeometry(PLANET_SIZE, 64, 64);
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.receiveShadow = true;
     scene.add(floor);
@@ -99,14 +101,13 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     // Floor
     let floorBody = new CANNON.Body({
       mass: 0,
-      shape: new CANNON.Plane(),
+      shape: new CANNON.Sphere(PLANET_SIZE),
       material: DiceManager.floorBodyMaterial,
     });
-    floorBody.quaternion.setFromAxisAngle(
-      new CANNON.Vec3(1, 0, 0),
-      -Math.PI / 2,
-    );
-
+    // floorBody.quaternion.setFromAxisAngle(
+    //   new CANNON.Vec3(1, 0, 0),
+    //   -Math.PI / 2,
+    // );
     world.add(floorBody);
 
     // Refs

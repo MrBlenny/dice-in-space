@@ -2,6 +2,7 @@
 import * as CANNON from 'cannon';
 import * as THREE from 'three';
 
+const PLANET_SIZE = 1000;
 class DiceManagerClass {
   constructor() {
     this.world = null;
@@ -508,6 +509,16 @@ class DiceObject {
     });
     this.object.body.linearDamping = 0.1;
     this.object.body.angularDamping = 0.1;
+    this.object.body.position.y = PLANET_SIZE + 10;
+
+    this.object.body.preStep = function () {
+      const multi = 50;
+      // this.force.set(
+      //   -multi * this.position.x,
+      //   -multi * this.position.y,
+      //   -multi * this.position.z,
+      // );
+    };
     DiceManager.world.add(this.object.body);
 
     return this.object;

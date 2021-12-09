@@ -44,13 +44,10 @@ export const Die = ({ scene, diceType, setValue, controls, launched }) => {
   useEffect(() => {
     if (launched) {
       let yRand = Math.random() * 20;
-      let xRand = Math.random() * 30 - 15;
-      let zRand = Math.random() * 30 - 15;
+      let xRand = Math.random() * 20 - 10;
+      let zRand = Math.random() * 20 - 10;
 
       die.resetBody(); // As the die is going to be reused between throws, it is necessary to reset the body
-      die.getObject().position.x = -15;
-      die.getObject().position.y = 2;
-      die.getObject().position.z = -15;
       die.getObject().quaternion.x =
         ((Math.random() * 90 - 45) * Math.PI) / 180;
       die.getObject().quaternion.z =
