@@ -13,28 +13,20 @@ class DiceManagerClass {
 
     this.diceBodyMaterial = new CANNON.Material();
     this.floorBodyMaterial = new CANNON.Material();
-    this.barrierBodyMaterial = new CANNON.Material();
 
     world.addContactMaterial(
       new CANNON.ContactMaterial(
         this.floorBodyMaterial,
         this.diceBodyMaterial,
-        { friction: 0.01, restitution: 0.5 },
+        { friction: 10, restitution: 1 },
       ),
     );
-    world.addContactMaterial(
-      new CANNON.ContactMaterial(
-        this.barrierBodyMaterial,
-        this.diceBodyMaterial,
-        { friction: 0, restitution: 1.0 },
-      ),
-    );
-    world.addContactMaterial(
-      new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, {
-        friction: 0,
-        restitution: 0.5,
-      }),
-    );
+    // world.addContactMaterial(
+    //   new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, {
+    //     friction: 0,
+    //     restitution: 0.5,
+    //   }),
+    // );
   }
 
   /**
@@ -512,16 +504,20 @@ class DiceObject {
     this.object.body.position.y = PLANET_SIZE + 1.5;
     this.object.position.y = PLANET_SIZE + 1.5;
 
+    const self = this;
     this.object.body.preStep = function () {
-      // console.log(self.isFinished())
-      // if (!self.isFinished()) {
-      const multi = 1;
-      this.force.set(
-        -multi * this.position.x,
-        -multi * this.position.y,
-        -multi * this.position.z,
-      );
-      // }
+      if (!self.isFinished()) {
+        const multi = 5;
+        this.force.set(
+          -multi * this.position.x,
+          -multi * this.position.y,
+          -multi * this.position.z,
+        );
+      } else {
+        this.force.set(0, 0, 0);
+        this.velocity.set(0, 0, 0);
+        this.angularVelocity.set(0, 0, 0);
+      }
     };
     DiceManager.world.add(this.object.body);
 

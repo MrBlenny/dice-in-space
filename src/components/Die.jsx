@@ -58,9 +58,9 @@ export const Die = ({ scene, diceType, setValue, controls, launched }) => {
       die
         .getObject()
         .body.angularVelocity.set(
-          20 * Math.random() - 10,
-          20 * Math.random() - 10,
-          20 * Math.random() - 10,
+          1 * Math.random() - 0.5,
+          1 * Math.random() - 0.5,
+          1 * Math.random() - 0.5,
         );
     }
   }, [launched]);
