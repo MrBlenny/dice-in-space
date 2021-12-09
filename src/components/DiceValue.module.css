@@ -1,12 +1,17 @@
 .value {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 60%;
-    height: 60px;
+    right: 32px;
+    bottom: 32px;
     display: flex;
     direction: row;
     justify-content: space-between;
     color: white;
+    border: 3px solid white;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 32px;
 }

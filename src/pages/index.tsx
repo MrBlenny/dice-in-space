@@ -29,6 +29,7 @@ const gravities = [
 
 export default function Home() {
   const [diceType, setDiceType] = useState(`20`);
+  const [planet, setPlanet] = useState(`mars`);
   const [gravity, setGravity] = useState(gravities[0]);
   const [dice, setDice] = useState<IDice[]>([
     {
@@ -56,9 +57,14 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Dice dice={dice} setValue={setValue} gravity={gravity.value} />
+        <Dice dice={dice} setValue={setValue} planet={planet} />
         <DiceValue value={value} />
-        <DiceSelector diceType={diceType} setDiceType={setDiceType} />
+        <DiceSelector
+          diceType={diceType}
+          setDiceType={setDiceType}
+          planet={planet}
+          setPlanet={setPlanet}
+        />
         <RollButton
           onClick={() => {
             if (dice[0].launched) {

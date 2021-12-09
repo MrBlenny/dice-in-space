@@ -2,12 +2,28 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 32px;
+    top: 100px;
     display: flex;
     flex-direction: row;
+    color: white;
+    font-size: 32px;
 }
 
-.dice {
-    padding: 15px;
+.select {
+    appearance: none;
+    font: inherit;
+    background: transparent;
     color: white;
+    border-radius: 20px;
+    border: 2px solid white;
+    padding: 0px 10px;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.option {
+    text-align: center;
+    text-justify: center;
+    background: rgba(0, 0, 0, 0.8);
 }

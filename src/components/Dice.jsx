@@ -5,15 +5,17 @@ import { DiceManager } from './dice';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Die } from './Die';
 import { useMount, useRaf } from 'react-use';
+import { Planet } from './Planet';
 
 // standard global variables
 var scene, camera, renderer, controls, world;
 
 const PLANET_SIZE = 1000;
 
-export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
+export const Dice = ({ dice = [], setValue, planet }) => {
   const rendererEl = useRef();
   const sceneRef = useRef();
+  const worldRef = useRef();
 
   useMount(() => {
     if (!rendererEl.current) {
@@ -61,24 +63,13 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     directionalLight.position.z = 1000;
     scene.add(directionalLight);
 
-    // let light = new THREE.SpotLight(0xefdfd5, 1.3);
-    // light.position.y = 300;
-    // light.target.position.set(0, 0, 0);
-    // light.castShadow = true;
-    // light.shadow.mapSize.width = 1024;
-    // light.shadow.mapSize.height = 1024;
-    // scene.add(light);
-
-    // FLOOR
-    var floorMaterial = new THREE.MeshStandardMaterial({
-      // color: '#13053c',
-      side: THREE.DoubleSide,
-      map: loader.load('/images/moon.jpg'),
-    });
-    var floorGeometry = new THREE.SphereGeometry(PLANET_SIZE, 64, 64);
-    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.receiveShadow = true;
-    scene.add(floor);
+    let light = new THREE.SpotLight(0xefdfd5, 0.1);
+    light.position.y = 1200;
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    light.shadow.mapSize.width = 1024;
+    light.shadow.mapSize.height = 1024;
+    scene.add(light);
 
     // SKYBOX/FOG
     var skyBoxGeometry = new THREE.SphereGeometry(10000, 64, 64);
@@ -92,26 +83,15 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
     scene.add(skyBox);
 
     world = new CANNON.World();
-    world.gravity.set(0, gravity * 10, 0);
+    world.gravity.set(0, 0, 0);
     world.broadphase = new CANNON.NaiveBroadphase();
     world.solver.iterations = 16;
 
     DiceManager.setWorld(world);
 
-    // Floor
-    let floorBody = new CANNON.Body({
-      mass: 0,
-      shape: new CANNON.Sphere(PLANET_SIZE),
-      material: DiceManager.floorBodyMaterial,
-    });
-    // floorBody.quaternion.setFromAxisAngle(
-    //   new CANNON.Vec3(1, 0, 0),
-    //   -Math.PI / 2,
-    // );
-    world.add(floorBody);
-
     // Refs
     sceneRef.current = scene;
+    worldRef.current = world;
   });
 
   useRaf(() => {});
@@ -124,17 +104,26 @@ export const Dice = ({ dice = [], setValue, gravity = -9.81 }) => {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }} ref={rendererEl}>
-      {sceneRef.current &&
-        dice.map((die, idx) => (
-          <Die
-            key={idx}
-            scene={sceneRef.current}
-            diceType={die.type}
-            launched={die.launched}
-            setValue={setValue}
-            controls={controls}
+      {sceneRef.current && worldRef.current && (
+        <>
+          <Planet
+            planet={planet}
+            scene={scene}
+            world={world}
+            size={PLANET_SIZE}
           />
-        ))}
+          {dice.map((die, idx) => (
+            <Die
+              key={idx}
+              scene={sceneRef.current}
+              diceType={die.type}
+              launched={die.launched}
+              setValue={setValue}
+              controls={controls}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 };

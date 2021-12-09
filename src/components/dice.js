@@ -509,15 +509,19 @@ class DiceObject {
     });
     this.object.body.linearDamping = 0.1;
     this.object.body.angularDamping = 0.1;
-    this.object.body.position.y = PLANET_SIZE + 10;
+    this.object.body.position.y = PLANET_SIZE + 1.5;
+    this.object.position.y = PLANET_SIZE + 1.5;
 
     this.object.body.preStep = function () {
-      const multi = 50;
-      // this.force.set(
-      //   -multi * this.position.x,
-      //   -multi * this.position.y,
-      //   -multi * this.position.z,
-      // );
+      // console.log(self.isFinished())
+      // if (!self.isFinished()) {
+      const multi = 1;
+      this.force.set(
+        -multi * this.position.x,
+        -multi * this.position.y,
+        -multi * this.position.z,
+      );
+      // }
     };
     DiceManager.world.add(this.object.body);
 
