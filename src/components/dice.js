@@ -499,8 +499,8 @@ class DiceObject {
       shape: this.object.geometry.cannon_shape,
       material: DiceManager.diceBodyMaterial,
     });
-    this.object.body.linearDamping = 0.1;
-    this.object.body.angularDamping = 0.1;
+    this.object.body.linearDamping = 0.2;
+    this.object.body.angularDamping = 0.5;
     this.object.body.position.y = PLANET_SIZE + 1.5;
     this.object.position.y = PLANET_SIZE + 1.5;
 
