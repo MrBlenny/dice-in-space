@@ -39,11 +39,11 @@ export default function Home() {
   useMount(() => {
     // Render defaults
     render(!renderVal);
+
+    console.log(`Code: https://github.com/MrBlenny/dice-in-space`);
+    console.log(`Sorry! It isn't the cleanest.`);
   });
   const [value, setValue] = useState<number | undefined>(undefined);
-
-  console.log(`Code: https://github.com/MrBlenny/dice-in-space`);
-  console.log(`Sorry! It isn't the cleanest.`);
 
   return (
     <div className={styles.container}>
