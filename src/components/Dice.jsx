@@ -23,7 +23,7 @@ const gravities = {
   saturn: 10.44,
   neptune: 11.15,
   uranus: 8.87,
-  wild: 0.5,
+  templeton: 0.5,
 };
 
 export const Dice = ({ dice = [], setValue, planet }) => {

@@ -23,7 +23,7 @@ export const planets = [
   `saturn`,
   `uranus`,
   `neptune`,
-  `wild`,
+  `templeton`,
 ];
 
 export const DiceSelector = ({
