@@ -1,17 +1,25 @@
 .value {
     position: absolute;
     right: 32px;
-    bottom: 32px;
+    bottom: 35px;
     display: flex;
     direction: row;
     justify-content: space-between;
     color: white;
-    border: 3px solid white;
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    font-size: 32px;
+    font-size: 60px;
+}
+
+.hexagon svg {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 120px;
+    height: 120px;
+    fill: white;
 }
