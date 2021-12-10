@@ -38,7 +38,7 @@ export const DiceSelector = ({
       >
         {dice.map((die) => (
           <option className={styles.option} value={die} key={die}>
-            D{die}
+            d{die}
           </option>
         ))}
       </select>

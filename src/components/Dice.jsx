@@ -4,7 +4,7 @@ import * as CANNON from 'cannon';
 import { DiceManager } from './dice';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Die } from './Die';
-import { useMount, useRaf } from 'react-use';
+import { useMount, useRafLoop } from 'react-use';
 import { Planet } from './Planet';
 import gsap from 'gsap';
 
@@ -12,6 +12,15 @@ import gsap from 'gsap';
 var scene, camera, renderer, controls, world;
 
 const PLANET_SIZE = 1000;
+
+const gravities = {
+  jupiter: 24.79,
+  mars: 3.721,
+  mercury: 3.7,
+  moon: 1.62,
+  neptune: 11.15,
+  saturn: 10.44,
+};
 
 export const Dice = ({ dice = [], setValue, planet }) => {
   const rendererEl = useRef();
@@ -92,7 +101,7 @@ export const Dice = ({ dice = [], setValue, planet }) => {
     DiceManager.setWorld(world);
 
     gsap
-      .to(camera.position, { y: PLANET_SIZE + 5, z: 10, duration: 2 })
+      .to(camera.position, { y: PLANET_SIZE + 3, z: 10, duration: 2 })
       .delay(1);
 
     // Refs
@@ -100,16 +109,14 @@ export const Dice = ({ dice = [], setValue, planet }) => {
     worldRef.current = world;
   });
 
-  useRaf(() => {});
-
-  if (renderer && scene && world) {
+  useRafLoop(() => {
     world.step(1.0 / 60.0);
     controls.update();
     renderer.render(scene, camera);
     const distance = camera.position.distanceTo(controls.target);
     scene.fog.near = distance;
     scene.fog.far = distance + 200;
-  }
+  });
 
   return (
     <div style={{ width: '100vw', height: '100vh' }} ref={rendererEl}>
@@ -129,6 +136,7 @@ export const Dice = ({ dice = [], setValue, planet }) => {
               launched={die.launched}
               setValue={setValue}
               controls={controls}
+              gravity={gravities[planet]}
             />
           ))}
         </>

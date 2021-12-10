@@ -1,6 +1,6 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useMount } from 'react-use';
+import React, { useCallback } from 'react';
+import { useEffect, useRef } from 'react';
+import { useMount, useRafLoop } from 'react-use';
 import { DiceD6, DiceD8, DiceD10, DiceD12, DiceD20 } from './dice';
 
 const getDie = (type) => {
@@ -21,49 +21,83 @@ const getDie = (type) => {
   }
 };
 
-let die;
+export const Die = ({
+  scene,
+  diceType,
+  setValue,
+  controls,
+  launched,
+  gravity,
+}) => {
+  const dieRef = useRef();
 
-export const Die = ({ scene, diceType, setValue, controls, launched }) => {
-  useMount(() => {
-    const DieClass = getDie(diceType);
-    die = new DieClass({ size: 1.5, backColor: '#ff0000' });
-    scene.add(die.getObject());
-  });
-  if (die && controls) {
-    die.updateMeshFromBody();
-    controls.target = die.object.position;
-  }
-
-  const value = die && die.getUpsideValue();
-
-  useEffect(() => {
-    if (launched) {
-      setValue(value);
-    }
-  }, [setValue, value]);
-
-  useEffect(() => {
-    if (launched) {
+  const launch = useCallback(() => {
+    if (dieRef.current && launched) {
       let yRand = Math.random() * 10;
       let xRand = Math.random() * 10 - 5;
       let zRand = Math.random() * 10 - 5;
 
-      die.resetBody(); // As the die is going to be reused between throws, it is necessary to reset the body
-      die.getObject().quaternion.x =
+      dieRef.current.resetBody(); // As the dieRef.current is going to be reused between throws, it is necessary to reset the body
+      dieRef.current.getObject().quaternion.x =
         ((Math.random() * 90 - 45) * Math.PI) / 180;
-      die.getObject().quaternion.z =
+      dieRef.current.getObject().quaternion.z =
         ((Math.random() * 90 - 45) * Math.PI) / 180;
-      die.updateBodyFromMesh();
-      die.getObject().body.velocity.set(xRand, 20 + yRand, zRand);
-      die
+      dieRef.current.updateBodyFromMesh();
+      dieRef.current.getObject().body.velocity.set(xRand, 20 + yRand, zRand);
+      dieRef.current
         .getObject()
         .body.angularVelocity.set(
-          3 * Math.random() - 0.5,
-          1 * Math.random() - 0.5,
-          1 * Math.random() - 0.5,
+          20 * Math.random() - 0.5,
+          20 * Math.random() - 0.5,
+          20 * Math.random() - 0.5,
         );
     }
+  }, [launched, dieRef.current]);
+
+  useRafLoop(() => {
+    if (dieRef.current && controls) {
+      dieRef.current.updateMeshFromBody();
+      controls.target = dieRef.current.object.position;
+      const value = dieRef.current && dieRef.current.getUpsideValue();
+      if (launched) {
+        setValue(value);
+      }
+    }
+  });
+
+  useEffect(() => {
+    launch();
   }, [launched]);
+
+  useEffect(() => {
+    if (dieRef.current) {
+      console.log(diceType);
+      dieRef.current.resetBody();
+      scene.remove(dieRef.current.getObject());
+    }
+    const DieClass = getDie(diceType);
+    dieRef.current = new DieClass({ size: 1.5, backColor: '#ff0000' });
+    scene.add(dieRef.current.getObject());
+    launch();
+  }, [diceType]);
+
+  useEffect(() => {
+    if (dieRef.current && dieRef.current.object && dieRef.current.object.body) {
+      dieRef.current.object.body.preStep = function () {
+        if (!dieRef.current.isFinished()) {
+          this.force.set(
+            -gravity * this.position.x,
+            -gravity * this.position.y,
+            -gravity * this.position.z,
+          );
+        } else {
+          this.force.set(0, 0, 0);
+          this.velocity.set(0, 0, 0);
+          this.angularVelocity.set(0, 0, 0);
+        }
+      };
+    }
+  }, [gravity, dieRef.current?.object?.body?.id]);
 
   return null;
 };

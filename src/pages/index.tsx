@@ -5,9 +5,8 @@ import styles from '@/styles/Home.module.css';
 import { DiceSelector } from '@/components/DiceSelector';
 import { DiceValue } from '@/components/DiceValue';
 import { RollButton } from '@/components/RollButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocalStorage, useMount } from 'react-use';
-import { render } from 'react-dom';
 
 interface IDice {
   type: string;
@@ -26,6 +25,17 @@ export default function Home() {
       launched: false,
     },
   ]);
+  useEffect(() => {
+    if (!dice[0].launched) {
+      setDice([
+        {
+          type: diceTypeDefaulted,
+          launched: false,
+        },
+      ]);
+    }
+  }, [diceTypeDefaulted]);
+
   useMount(() => {
     // Render defaults
     render(!renderVal);
@@ -54,7 +64,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <Dice dice={dice} setValue={setValue} planet={planetDefaulted} />
-        <DiceValue value={value} />
+        <DiceValue value={value} diceType={diceTypeDefaulted} />
         <DiceSelector
           diceType={diceTypeDefaulted}
           setDiceType={setDiceType}
