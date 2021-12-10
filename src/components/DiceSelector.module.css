@@ -30,6 +30,7 @@
     background-repeat: no-repeat;
     background-position-x: 95%;
     background-position-y: 4px;
+    font-family: inherit;
 }
 .option {
     text-align: center;

@@ -7,6 +7,7 @@ import { DiceValue } from '@/components/DiceValue';
 import { RollButton } from '@/components/RollButton';
 import { useEffect, useState } from 'react';
 import { useLocalStorage, useMount } from 'react-use';
+import { Popup } from '@/components/Popup';
 
 interface IDice {
   type: string;
@@ -115,6 +116,7 @@ export default function Home() {
             }
           }}
         />
+        <Popup />
       </main>
     </div>
   );
