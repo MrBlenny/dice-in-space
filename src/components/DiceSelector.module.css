@@ -9,6 +9,8 @@
     color: white;
     font-size: 32px;
     justify-content: center;
+    text-align: center;
+    align-items: center;
 }
 
 .select {
@@ -21,8 +23,7 @@
     padding-left: 10px;
     padding-right: 30px;
     text-align: center;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 5px 10px;
     cursor: pointer;
     background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     background-repeat: no-repeat;
