@@ -14,12 +14,16 @@ var scene, camera, renderer, controls, world;
 const PLANET_SIZE = 1000;
 
 const gravities = {
-  jupiter: 24.79,
-  mars: 3.721,
   mercury: 3.7,
+  venus: 8.87,
+  earth: 9.81,
   moon: 1.62,
-  neptune: 11.15,
+  mars: 3.721,
+  jupiter: 24.79,
   saturn: 10.44,
+  neptune: 11.15,
+  uranus: 8.87,
+  wild: 0.5,
 };
 
 export const Dice = ({ dice = [], setValue, planet }) => {

@@ -14,12 +14,16 @@ function capitalize(str: string) {
 
 export const dice = [`6`, `8`, `10`, `12`, `20`];
 export const planets = [
-  `jupiter`,
-  `mars`,
   `mercury`,
+  `venus`,
+  `earth`,
   `moon`,
-  `neptune`,
+  `mars`,
+  `jupiter`,
   `saturn`,
+  `uranus`,
+  `neptune`,
+  `wild`,
 ];
 
 export const DiceSelector = ({
