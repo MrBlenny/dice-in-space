@@ -27,6 +27,7 @@ export const Die = ({
   setValue,
   controls,
   launched,
+  planet,
   gravity,
   focus,
 }) => {
@@ -34,6 +35,8 @@ export const Die = ({
 
   const launch = useCallback(() => {
     if (dieRef.current && launched) {
+      const modifier = planet === 'templeton' ? 50 : 1;
+
       let yRand = Math.random() * 10;
       let xRand = Math.random() * 10 - 5;
       let zRand = Math.random() * 10 - 5;
@@ -44,7 +47,9 @@ export const Die = ({
       dieRef.current.getObject().quaternion.z =
         ((Math.random() * 90 - 45) * Math.PI) / 180;
       dieRef.current.updateBodyFromMesh();
-      dieRef.current.getObject().body.velocity.set(xRand, 20 + yRand, zRand);
+      dieRef.current
+        .getObject()
+        .body.velocity.set(xRand * modifier, 20 + yRand, zRand * modifier);
       dieRef.current
         .getObject()
         .body.angularVelocity.set(

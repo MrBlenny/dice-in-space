@@ -135,6 +135,7 @@ export const Dice = ({ dice = [], setValue, planet }) => {
           {dice.map((die, idx) => (
             <Die
               key={idx}
+              planet={planet}
               scene={sceneRef.current}
               diceType={die.type}
               launched={die.launched}
