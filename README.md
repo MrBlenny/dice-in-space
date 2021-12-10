@@ -1,4 +1,8 @@
-# Dungeons and Daniels
+# Dice In Space
+
+Rolls dice on planets for interplanetary D&D.
+
+![preview](./docs/preview.png)
 
 ### Development
 

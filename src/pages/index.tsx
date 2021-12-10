@@ -6,43 +6,39 @@ import { DiceSelector } from '@/components/DiceSelector';
 import { DiceValue } from '@/components/DiceValue';
 import { RollButton } from '@/components/RollButton';
 import { useState } from 'react';
+import { useLocalStorage, useMount } from 'react-use';
+import { render } from 'react-dom';
 
 interface IDice {
   type: string;
   launched: boolean;
 }
 
-const gravities = [
-  {
-    name: `earth`,
-    value: -9.81,
-  },
-  {
-    name: `mars`,
-    value: -15.81,
-  },
-  {
-    name: `moon`,
-    value: -3.81,
-  },
-];
-
 export default function Home() {
-  const [diceType, setDiceType] = useState(`20`);
-  const [planet, setPlanet] = useState(`mars`);
-  const [gravity, setGravity] = useState(gravities[0]);
+  const [renderVal, render] = useState(false);
+  const [diceType, setDiceType] = useLocalStorage<string>(`dice`, `20`);
+  const [planet, setPlanet] = useLocalStorage<string>(`planet`, `mars`);
+  const diceTypeDefaulted = diceType || `20`;
+  const planetDefaulted = planet || `mars`;
   const [dice, setDice] = useState<IDice[]>([
     {
-      type: diceType,
+      type: diceTypeDefaulted,
       launched: false,
     },
   ]);
+  useMount(() => {
+    // Render defaults
+    render(!renderVal);
+  });
   const [value, setValue] = useState<number | undefined>(undefined);
   return (
     <div className={styles.container}>
       <Head>
-        <title>Dungeons and Daniels</title>
-        <meta name="description" content="Roll some dice" />
+        <title>Dice In Space</title>
+        <meta
+          name="description"
+          content="Roll some dice on different planets"
+        />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -57,12 +53,12 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Dice dice={dice} setValue={setValue} planet={planet} />
+        <Dice dice={dice} setValue={setValue} planet={planetDefaulted} />
         <DiceValue value={value} />
         <DiceSelector
-          diceType={diceType}
+          diceType={diceTypeDefaulted}
           setDiceType={setDiceType}
-          planet={planet}
+          planet={planetDefaulted}
           setPlanet={setPlanet}
         />
         <RollButton
@@ -71,7 +67,7 @@ export default function Home() {
               setDice([
                 ...dice,
                 {
-                  type: diceType,
+                  type: diceTypeDefaulted,
                   launched: true,
                 },
               ]);

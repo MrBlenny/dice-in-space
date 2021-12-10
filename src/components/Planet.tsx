@@ -14,24 +14,25 @@ interface IPlanetProps {
 const loader = new THREE.TextureLoader();
 
 export const Planet = ({ planet, scene, world, size }: IPlanetProps) => {
-  const materialRef = useRef<THREE.MeshStandardMaterial | undefined>();
+  const materialRef = useRef<THREE.MeshLambertMaterial | undefined>();
   useMount(() => {
     // FLOOR
-    const material = new THREE.MeshStandardMaterial({
-      color: `0x00000`,
+    const material = new THREE.MeshLambertMaterial({
       side: THREE.DoubleSide,
     });
-    const floorGeometry = new THREE.SphereGeometry(size, 64, 64);
-    const floor = new THREE.Mesh(floorGeometry, material);
-    floor.receiveShadow = true;
-    scene.add(floor);
+    const planetGeometry = new THREE.SphereGeometry(size, 128, 128);
+    const planet = new THREE.Mesh(planetGeometry, material);
+    planet.receiveShadow = true;
+    planet.rotation.x = -Math.PI / 5;
+    scene.add(planet);
 
-    const floorBody = new CANNON.Body({
+    const planetBody = new CANNON.Body({
       mass: 0,
       shape: new CANNON.Sphere(size),
       material: DiceManager.floorBodyMaterial,
     });
-    world.addBody(floorBody);
+
+    world.addBody(planetBody);
 
     materialRef.current = material;
   });

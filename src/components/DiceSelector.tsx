@@ -49,9 +49,9 @@ export const DiceSelector = ({
         value={planet}
         onChange={(e) => setPlanet(e.target.value)}
       >
-        {planets.map((planet) => (
-          <option className={styles.option} value={planet} key={planet}>
-            {capitalize(planet)}
+        {planets.map((item) => (
+          <option className={styles.option} value={item} key={item}>
+            {capitalize(item)}
           </option>
         ))}
       </select>
