@@ -137,6 +137,7 @@ export const Dice = ({ dice = [], setValue, planet }) => {
               setValue={setValue}
               controls={controls}
               gravity={gravities[planet]}
+              focus={idx === dice.length - 1}
             />
           ))}
         </>

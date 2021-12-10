@@ -28,6 +28,7 @@ export const Die = ({
   controls,
   launched,
   gravity,
+  focus,
 }) => {
   const dieRef = useRef();
 
@@ -57,9 +58,11 @@ export const Die = ({
   useRafLoop(() => {
     if (dieRef.current && controls) {
       dieRef.current.updateMeshFromBody();
-      controls.target = dieRef.current.object.position;
       const value = dieRef.current && dieRef.current.getUpsideValue();
-      if (launched) {
+      if (focus) {
+        controls.target = dieRef.current.object.position;
+      }
+      if (launched && focus) {
         setValue(value);
       }
     }
