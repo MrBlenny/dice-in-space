@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useTimeoutFn } from 'react-use';
+// import { useTimeoutFn } from 'react-use';
 import styles from './Popup.module.css';
 
 export const Popup = () => {
   const [show, setShow] = useState(false);
-  useTimeoutFn(() => {
-    setShow(true);
-  }, 3500);
+  // useTimeoutFn(() => {
+  //   setShow(true);
+  // }, 3500);
   if (!show) {
     return null;
   }
