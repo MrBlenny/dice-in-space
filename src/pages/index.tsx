@@ -8,6 +8,20 @@ import { RollButton } from '@/components/RollButton';
 import { useEffect, useState } from 'react';
 import { useLocalStorage, useMount } from 'react-use';
 import { Popup } from '@/components/Popup';
+import { DiceSimModify } from '@/components/DiceSimModify';
+
+const gravities = {
+  mercury: 3.7,
+  venus: 8.87,
+  earth: 9.81,
+  moon: 1.62,
+  mars: 3.721,
+  jupiter: 24.79,
+  saturn: 10.44,
+  neptune: 11.15,
+  uranus: 8.87,
+  templeton: 0.5,
+};
 
 interface IDice {
   type: string;
@@ -16,6 +30,10 @@ interface IDice {
 
 export default function Home() {
   const [renderVal, render] = useState(false);
+  const [gravity, setGravity] = useState(9.81);
+  const [force, setForce] = useState(10);
+  const [angle, setAngle] = useState(90);
+
   const [diceType, setDiceType] = useLocalStorage<string>(`dice`, `20`);
   const [planet, setPlanet] = useLocalStorage<string>(`planet`, `mars`);
   const diceTypeDefaulted = diceType || `20`;
@@ -36,6 +54,10 @@ export default function Home() {
       ]);
     }
   }, [diceTypeDefaulted]);
+
+  useEffect(() => {
+    setGravity(gravities[planetDefaulted as keyof typeof gravities]);
+  }, [planetDefaulted]);
 
   useMount(() => {
     // Render defaults
@@ -88,13 +110,28 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Dice dice={dice} setValue={setValue} planet={planetDefaulted} />
+        <Dice
+          dice={dice}
+          setValue={setValue}
+          planet={planetDefaulted}
+          gravity={gravity}
+          force={force}
+          angle={angle}
+        />
         <DiceValue value={value} diceType={diceTypeDefaulted} />
         <DiceSelector
           diceType={diceTypeDefaulted}
           setDiceType={setDiceType}
           planet={planetDefaulted}
           setPlanet={setPlanet}
+        />
+        <DiceSimModify
+          gravity={gravity}
+          setGravity={setGravity}
+          force={force}
+          setForce={setForce}
+          angle={angle}
+          setAngle={setAngle}
         />
         <RollButton
           onClick={() => {

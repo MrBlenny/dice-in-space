@@ -13,20 +13,14 @@ var scene, camera, renderer, controls, world;
 
 const PLANET_SIZE = 1000;
 
-const gravities = {
-  mercury: 3.7,
-  venus: 8.87,
-  earth: 9.81,
-  moon: 1.62,
-  mars: 3.721,
-  jupiter: 24.79,
-  saturn: 10.44,
-  neptune: 11.15,
-  uranus: 8.87,
-  templeton: 0.5,
-};
-
-export const Dice = ({ dice = [], setValue, planet }) => {
+export const Dice = ({
+  dice = [],
+  setValue,
+  planet,
+  gravity,
+  force,
+  angle,
+}) => {
   const rendererEl = useRef();
   const sceneRef = useRef();
   const worldRef = useRef();
@@ -141,7 +135,9 @@ export const Dice = ({ dice = [], setValue, planet }) => {
               launched={die.launched}
               setValue={setValue}
               controls={controls}
-              gravity={gravities[planet]}
+              gravity={gravity}
+              force={force}
+              angle={angle}
               focus={idx === dice.length - 1}
             />
           ))}

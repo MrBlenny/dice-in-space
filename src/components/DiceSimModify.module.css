@@ -1,0 +1,28 @@
+.outer {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  color: white;
+}
+
+.outer input {
+  width: 200px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.label {
+  display: inline-block;
+  width: 60px;
+}
+
+.value {
+  padding-left: 20px;
+  width: 100px;
+  display: inline-block;
+}
