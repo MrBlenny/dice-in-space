@@ -20,6 +20,7 @@ export const Dice = ({
   gravity,
   force,
   angle,
+  edit,
 }) => {
   const rendererEl = useRef();
   const sceneRef = useRef();
@@ -139,6 +140,7 @@ export const Dice = ({
               force={force}
               angle={angle}
               focus={idx === dice.length - 1}
+              edit={edit}
             />
           ))}
         </>

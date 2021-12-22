@@ -1,28 +1,71 @@
 .outer {
   position: absolute;
   left: 50%;
-  bottom: 30px;
+  bottom: 0px;
   transform: translateX(-50%);
   color: white;
 }
 
-.outer input {
-  width: 200px;
-}
-
-.row {
+.buttonRow {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.outer button {
+  font-size: 20px;
+  font-family: inherit;
+  width: 120px;
+  height: 40px;
+  border-top-left-radius: 80px;
+  border-top-right-radius: 80px;
+  background: black;
+  color: white;
+  cursor: pointer;
+  border: none;
+  margin-top: 40px;
+}
+
+.items {
+  display: flex;
   flex-direction: row;
+}
+
+@media only screen and (max-width: 600px) {
+  .items {
+    display: none;
+  }
+  .buttonRow {
+    display: none;
+  }
+}
+
+.item {
+  padding: 10px 20px;
+}
+
+.item :global(.rc-slider) {
+  width: 250px;
+  display: block;
 }
 
 .label {
   display: inline-block;
   width: 60px;
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+.disabled {
+  opacity: 0.5;
 }
 
 .value {
-  padding-left: 20px;
+  font-size: 16px;
+  padding-top: 2px;
+  padding-bottom: 5px;
   width: 100px;
   display: inline-block;
+  float: right;
+  text-align: end;
 }

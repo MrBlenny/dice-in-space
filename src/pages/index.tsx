@@ -30,9 +30,9 @@ interface IDice {
 
 export default function Home() {
   const [renderVal, render] = useState(false);
-  const [gravity, setGravity] = useState(9.81);
   const [force, setForce] = useState(10);
   const [angle, setAngle] = useState(90);
+  const [edit, setEdit] = useState(false);
 
   const [diceType, setDiceType] = useLocalStorage<string>(`dice`, `20`);
   const [planet, setPlanet] = useLocalStorage<string>(`planet`, `mars`);
@@ -44,6 +44,11 @@ export default function Home() {
       launched: false,
     },
   ]);
+
+  const [gravity, setGravity] = useState(
+    gravities[diceTypeDefaulted as keyof typeof gravities],
+  );
+
   useEffect(() => {
     if (!dice[0].launched) {
       setDice([
@@ -58,6 +63,12 @@ export default function Home() {
   useEffect(() => {
     setGravity(gravities[planetDefaulted as keyof typeof gravities]);
   }, [planetDefaulted]);
+
+  useEffect(() => {
+    if (!edit) {
+      setGravity(gravities[planetDefaulted as keyof typeof gravities]);
+    }
+  }, [edit]);
 
   useMount(() => {
     // Render defaults
@@ -116,6 +127,7 @@ export default function Home() {
           planet={planetDefaulted}
           gravity={gravity}
           force={force}
+          edit={edit}
           angle={angle}
         />
         <DiceValue value={value} diceType={diceTypeDefaulted} />
@@ -132,6 +144,8 @@ export default function Home() {
           setForce={setForce}
           angle={angle}
           setAngle={setAngle}
+          edit={edit}
+          setEdit={setEdit}
         />
         <RollButton
           onClick={() => {

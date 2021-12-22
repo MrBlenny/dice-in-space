@@ -32,7 +32,7 @@ export const Die = ({
   focus,
   force,
   angle,
-  random,
+  edit,
 }) => {
   const dieRef = useRef();
 
@@ -48,11 +48,7 @@ export const Die = ({
       dieRef.current.getObject().quaternion.z =
         ((Math.random() * 90 - 45) * Math.PI) / 180;
       dieRef.current.updateBodyFromMesh();
-      if (random) {
-        dieRef.current
-          .getObject()
-          .body.velocity.set(xRand * modifier, 20 + yRand, zRand * modifier);
-      } else {
+      if (edit) {
         dieRef.current
           .getObject()
           .body.velocity.set(
@@ -60,6 +56,8 @@ export const Die = ({
             20 + yRand,
             force * Math.cos((angle / 180) * Math.PI),
           );
+      } else {
+        dieRef.current.getObject().body.velocity.set(xRand, 20 + yRand, zRand);
       }
 
       dieRef.current
