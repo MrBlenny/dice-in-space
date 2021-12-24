@@ -180,7 +180,6 @@ export default function Home() {
           force={force}
           edit={edit}
           angle={angle}
-          centerCamera={merry}
         />
         <DiceValue value={value} diceType={diceTypeDefaulted} />
         <DiceSelector
