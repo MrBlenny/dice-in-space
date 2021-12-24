@@ -5,8 +5,13 @@ import styles from '@/styles/Home.module.css';
 import { DiceSelector } from '@/components/DiceSelector';
 import { DiceValue } from '@/components/DiceValue';
 import { RollButton } from '@/components/RollButton';
-import { useEffect, useState } from 'react';
-import { useLocalStorage, useMount } from 'react-use';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useInterval,
+  useKeyPressEvent,
+  useLocalStorage,
+  useMount,
+} from 'react-use';
 import { Popup } from '@/components/Popup';
 import { DiceSimModify } from '@/components/DiceSimModify';
 
@@ -33,6 +38,7 @@ export default function Home() {
   const [force, setForce] = useState(10);
   const [angle, setAngle] = useState(90);
   const [edit, setEdit] = useState(false);
+  const [merry, setMerry] = useState(false);
 
   const [diceType, setDiceType] = useLocalStorage<string>(`dice`, `20`);
   const [planet, setPlanet] = useLocalStorage<string>(`planet`, `mars`);
@@ -44,6 +50,31 @@ export default function Home() {
       launched: false,
     },
   ]);
+  const [keys, setKeys] = useState(``);
+
+  const appendKey = useCallback(
+    (key: string) => setKeys(`${keys}${key}`),
+    [keys],
+  );
+
+  const launch = useCallback(() => {
+    if (dice[0].launched) {
+      setDice([
+        ...dice,
+        {
+          type: diceTypeDefaulted,
+          launched: true,
+        },
+      ]);
+    } else {
+      setDice([
+        {
+          ...dice[0],
+          launched: true,
+        },
+      ]);
+    }
+  }, [dice, setDice]);
 
   const [gravity, setGravity] = useState(
     gravities[diceTypeDefaulted as keyof typeof gravities],
@@ -70,6 +101,19 @@ export default function Home() {
     }
   }, [edit]);
 
+  useKeyPressEvent(
+    () => true,
+    (e) => {
+      appendKey(e.key);
+    },
+  );
+
+  useEffect(() => {
+    if (!merry && keys.includes(`merry`)) {
+      setMerry(true);
+    }
+  }, [keys, setMerry]);
+
   useMount(() => {
     // Render defaults
     render(!renderVal);
@@ -77,6 +121,13 @@ export default function Home() {
     console.log(`Code: https://github.com/MrBlenny/dice-in-space`);
     console.log(`Sorry! It isn't the cleanest.`);
   });
+
+  useInterval(() => {
+    if (merry) {
+      launch();
+    }
+  }, 500);
+
   const [value, setValue] = useState<number | undefined>(undefined);
 
   return (
@@ -129,6 +180,7 @@ export default function Home() {
           force={force}
           edit={edit}
           angle={angle}
+          centerCamera={merry}
         />
         <DiceValue value={value} diceType={diceTypeDefaulted} />
         <DiceSelector
@@ -147,27 +199,15 @@ export default function Home() {
           edit={edit}
           setEdit={setEdit}
         />
-        <RollButton
-          onClick={() => {
-            if (dice[0].launched) {
-              setDice([
-                ...dice,
-                {
-                  type: diceTypeDefaulted,
-                  launched: true,
-                },
-              ]);
-            } else {
-              setDice([
-                {
-                  ...dice[0],
-                  launched: true,
-                },
-              ]);
-            }
-          }}
-        />
-        <Popup />
+        <RollButton onClick={launch} />
+        {merry && (
+          <Popup
+            onClose={() => {
+              setMerry(false);
+              setKeys(``);
+            }}
+          />
+        )}
       </main>
     </div>
   );

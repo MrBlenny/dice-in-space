@@ -1,4 +1,4 @@
-import react, { useRef } from 'react';
+import react, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import * as CANNON from 'cannon';
 import { DiceManager } from './dice';

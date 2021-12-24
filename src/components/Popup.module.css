@@ -10,7 +10,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,9 +21,21 @@
     font-size: 20px;
     line-height: 20px;
     color: white;
-    width: 400px;
     text-align: center;
+}
 
+.popup h3 {
+    font-size: 180px;
+    margin: 0;
+    line-height: 170px;
+    font-weight: normal;
+}
+
+@media only screen and (max-width: 600px) {
+    .popup h3 {
+        font-size: 60px;
+        line-height: 60px;
+    }
 }
 
 .button {
